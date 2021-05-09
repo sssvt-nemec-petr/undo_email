@@ -2,7 +2,7 @@
 
 •	Do arraye s pluginy na ř. 91 připsat undoEmail -> C:\xampp\htdocs\roundcubemail\config\config.inc.php
 
-•	V roundcube db vytvořit tabulku unsentemails:
+•	V db pro roundcube vytvořit tabulku unsentemails:
 
 		create table unsentemails
 		(
