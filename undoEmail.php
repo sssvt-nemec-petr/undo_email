@@ -13,9 +13,20 @@ class undoEmail extends rcube_plugin
     function mbs($args)
     {
 
-        $regex = "/'txtbody' => '(.+)'/";
+        $regex = "/'txtbody' => '(.+)',\n.*'htmlbody' => (.*)'/";
         preg_match($regex,var_export($args['message'], true), $re);
         $mailBody = $re[1];
+
+        if ($re[2] == 'NULL')
+        {
+            $htmlBody = null;
+        }
+        else
+        {
+            $htmlBody = $re[2];
+        }
+
+
         //$mime = $args['message']->encode();
         //$body = $mime['body'];
         //$headers = $mime['headers'];
@@ -38,10 +49,6 @@ class undoEmail extends rcube_plugin
             $conn->close();
         }
         catch(Exception $e){
-//            $conn = new mysqli("localhost","root", null, "email");
-//            $sql = "insert into unsentemails (receiverMail,senderMail,emailContents) values ('err','err','err')";
-//            $conn->query($sql);
-//            $conn->close();
         }
 
         return $args;
