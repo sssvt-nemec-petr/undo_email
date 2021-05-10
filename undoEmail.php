@@ -15,16 +15,22 @@ class undoEmail extends rcube_plugin
 
         $regex = "/'txtbody' => '(.+)',\n.*'htmlbody' => (.*)'/";
         preg_match($regex,var_export($args['message'], true), $re);
-        $mailBody = $re[1];
 
-        if ($re[2] == 'NULL')
+        foreach (strtolower($re) as $entry)
         {
-            $htmlBody = null;
+
+         if($entry = 'null')
+         {
+             $entry = null;
+         }
+
         }
-        else
-        {
-            $htmlBody = $re[2];
-        }
+
+
+
+        $mailBody = $re[1];
+        $htmlBody = $re[2];
+
 
 
         //$mime = $args['message']->encode();
