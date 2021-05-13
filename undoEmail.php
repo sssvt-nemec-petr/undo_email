@@ -18,15 +18,11 @@ class undoEmail extends rcube_plugin
 
         foreach (strtolower($re) as $entry)
         {
-
          if($entry = 'null')
          {
              $entry = null;
          }
-
         }
-
-
 
         $mailBody = $re[1];
         $htmlBody = $re[2];
@@ -53,10 +49,17 @@ class undoEmail extends rcube_plugin
             $stmt->close();
 
             $conn->close();
+            /*
+
+
+               $this->rcmail->deliver_message($mailBody, mailFrom, mailTo,
+                null, null, null, null);
+
+                Tohle posílá maily, až bude regex, bude to fungovat.
+            */
         }
         catch(Exception $e){
         }
-
         return $args;
     }
 }

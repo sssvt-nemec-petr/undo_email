@@ -13,4 +13,9 @@
 		    emailContents text not null
 		);
 
+		alter table users
+			add undoTime int default 10 not null;
+
+
+
 •	Příp. přepsat název db v undoEmail.php, hlavní je, aby db měla tabulku unsentemails.
