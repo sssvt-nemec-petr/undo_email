@@ -8,6 +8,7 @@ class undoEmail extends rcube_plugin
     function init()
     {
         $this->add_hook('message_before_send', [$this, 'mbs']);
+        $this->include_script('Demo.js');
     }
 
     function mbs($args)
