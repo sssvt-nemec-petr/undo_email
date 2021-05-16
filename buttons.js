@@ -4,19 +4,11 @@ rcmail.addEventListener('init', function(evt) {
     $("#testButton").hide();
     $("#basedButton").hide();
     $("#messagestack").css("opacity","0");
-    // rcmail.register_button('plugin.cancelMail','testing','link');
-    // rcmail.register_command('plugin.cancelMail',function (resp){
-    //     alert("Callback")
-    // }, true);
-    // rcmail.enable_command('plugin.cancelMail', true);
 
     rcmail.addEventListener('plugin.callback', function (resp){
         alert("Massage arrived sir");
         console.log(resp);
     })
-
-
-
     $("#rcmbtn112").click(function(){
         $("#testButton").show();
         $("#basedButton").show();
