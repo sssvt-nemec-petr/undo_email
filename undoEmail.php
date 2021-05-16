@@ -9,109 +9,95 @@ class undoEmail extends rcube_plugin
     {
         $this->add_hook('message_before_send', [$this, 'mbs']);
         $this->include_script('Demo.js');
-        $this->register_action('plugin.cancelMail', [$this, 'test']);
+        $this->register_action('plugin.cancelMail', [$this, 'deleteMail']);
+        $this->register_action('plugin.sendMail', [$this, 'sendMail']);
     }
 
-    function test(){
+
+    function deleteMail()
+    {
         try {
-            $conn = new mysqli("localhost","root", null, "email");
-            $stmt = $conn->prepare("insert into unsentemails (receiverMail,senderMail,emailContents) values (?, ?, ?)");
-            $a = "123456789Ayoo"; $b = $a; $c = $a;
+            $conn = new mysqli("localhost", "root", null, "email");
+            $stmt = ("DELETE FROM unsentemails ORDER BY emailID DESC LIMIT 1");
 
-            $stmt->bind_param('sss',$a,$b,$c);
-
-            $stmt->execute();
-            $stmt->close();
+            $conn->query($stmt);
 
             $conn->close();
-        }
-        catch(Exception $e){
+        } catch (Exception $e) {
         }
     }
 
-    function request_handler($args){
-        try {
-            $conn = new mysqli("localhost","root", null, "email");
-            $stmt = $conn->prepare("insert into unsentemails (receiverMail,senderMail,emailContents) values (?, ?, ?)");
-            $a = "Swag"; $b = $a; $c = $a;
+    function sendMail(){
+        $conn = new mysqli("localhost", "root", null, "email");
+        $query = "select * from unsentemails order by emailId desc limit 1";
+        $result = $conn->query($query);
+            while ($row = $result->fetch_assoc()) {
+                $from = $row["senderMail"];
+                $to = $row["receiverMail"];
+                $mailBody = $row["mailBody"];
+                $htmlBody = $row["htmlBody"];
+                $subject = $row["subject"];
+            }
+        $mime = new Mail_mime([]);
 
-            $stmt->bind_param('sss',$a,$b,$c);
+        $mime->setTXTBody($mailBody);
+        $mime->setHTMLBody($htmlBody);
+        $mime->headers(['BeforeSend' => 'false', 'From' => $from,'Subject' => $subject]);
 
-            $stmt->execute();
-            $stmt->close();
-
-            $conn->close();
-        }
-        catch(Exception $e){
-        }
 
         $rcmail = rcmail::get_instance();
-        $rcmail->output->command('plugin.callback',['message'=>'swaggin']);
-        $rcmail->output->send();
+
+        $smpt_opts = ['dsn' => 'false'];
+        $smtp_error = null;
+        $mailbody_file = null;
+
+        $rcmail->deliver_message($mime,'test@localhost.com',['test2@localhost.com'],$smtp_error,$mailbody_file,$smpt_opts,true);
+        $conn->close();
     }
 
     function mbs($args)
     {
+        if($args['message']->headers()['BeforeSend'] != 'false') {
+        $txt = var_export($args['message'], true);
 
-        $regex = "/'txtbody' => '(.+)',\n.*'htmlbody' => (.*)'/";
-        preg_match($regex,var_export($args['message'], true), $re);
-
-        foreach (strtolower($re) as $entry)
-        {
-         if($entry = 'null')
-         {
-             $entry = null;
-         }
+        $regex = "/'txtbody' => (.+),.*\n.*'htmlbody'.*=> (.*),[\S\s]*'Subject' => '(.*)'/m";
+        preg_match($regex, $txt, $re);
+        for ($i = 0; $i < count($re); $i++) {
+            $entry = $re[$i];
+            if (strtolower($entry) == 'null') {
+                $re[$i] = '';
+            } else if (strlen($entry) > 1 && $entry[0] == "'" && $entry[strlen($entry) - 1] == "'") {
+                $re[$i] = substr($entry, 1, strlen($entry) - 2);
+            }
         }
 
         $mailBody = $re[1];
         $htmlBody = $re[2];
+        $mailSubject = $re[3];
+        $to = $args['mailto'];
+        $from = $args['from'];
 
-
-
-        //$mime = $args['message']->encode();
-        //$body = $mime['body'];
-        //$headers = $mime['headers'];
         $args['abort'] = true;
         $args['error'] = 'TestError';
         $args['result'] = false;
 
         try {
-            $conn = new mysqli("localhost","root", null, "email");
-            $stmt = $conn->prepare("insert into unsentemails (receiverMail,senderMail,emailContents) values (?, ?, ?)");
-            $stmt->bind_param('sss',$a,$b,$c);
-
-            $a = $args['mailto'];
-            $b = $args['from'];
-            $c = $mailBody;
-            //$d = var_export($args['message'], true);
-
+            $conn = new mysqli("localhost", "root", null, "email");
+            $stmt = $conn->prepare("insert into unsentemails (receiverMail,senderMail,mailBody, htmlBody,subject) values (?, ?, ?, ?, ?)");
+            $stmt->bind_param('sssss', $to, $from, $mailBody, $htmlBody, $mailSubject);
 
             $stmt->execute();
             $stmt->close();
 
             $conn->close();
-            /*
-
-
-               $this->rcmail->deliver_message($mailBody, mailFrom, mailTo,
-                null, null, null, null);
-
-                Tohle posílá maily, až bude regex, bude to fungovat.
-            */
+            //$this->sendMail();
         }
-        catch(Exception $e){
+        catch (Exception $e) {
         }
         return $args;
     }
-   /* function sendMail($args){
-
-    }*/
+    }
 }
-
-
-
-
 
 
 ?>
