@@ -4,18 +4,16 @@
 
 •	V db pro roundcube vytvořit tabulku unsentemails:
 
-		create table unsentemails
-		(
-		   emailID       int auto_increment
-	 	    primary key,
-		    receiverMail  text not null,
-		    senderMail    text not null,
-		    emailContents text not null
-		);
-
-		alter table users
-			add undoTime int default 10 not null;
-
+			create table unsentemails
+			(
+			    emailID      int auto_increment
+				primary key,
+			    receiverMail text not null,
+			    senderMail   text not null,
+			    htmlBody     text null,
+			    mailBody     text  null,
+			    subject      text null
+			);
 
 
 •	Příp. přepsat název db v undoEmail.php, hlavní je, aby db měla tabulku unsentemails.
