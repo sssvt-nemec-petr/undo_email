@@ -3,6 +3,7 @@ rcmail.addEventListener('init', function(evt) {
     $(".formbuttons").append("<a id='basedButton' style='position:relative;left: 11px;top: 1px;padding:10px;border-radius: 4px;border:1px solid rgb(55,190,255);background-color: rgb(0,106,157);color: rgb(226,232,233);z-index: 9999' href='javascript:void(0)'>Send last</a>");
     $("#testButton").hide();
     $("#basedButton").hide();
+    $("#messagestack").css("opacity","0");
     // rcmail.register_button('plugin.cancelMail','testing','link');
     // rcmail.register_command('plugin.cancelMail',function (resp){
     //     alert("Callback")
@@ -13,6 +14,9 @@ rcmail.addEventListener('init', function(evt) {
         alert("Massage arrived sir");
         console.log(resp);
     })
+
+
+
     $("#rcmbtn112").click(function(){
         $("#testButton").show();
         $("#basedButton").show();

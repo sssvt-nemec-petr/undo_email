@@ -78,7 +78,7 @@ class undoEmail extends rcube_plugin
         $from = $args['from'];
 
         $args['abort'] = true;
-        $args['error'] = 'TestError';
+        $args['error'] = null;
         $args['result'] = false;
 
         try {
