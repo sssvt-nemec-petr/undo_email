@@ -39,10 +39,12 @@ class undoEmail extends rcube_plugin
                 $subject = $row["subject"];
             }
         $mime = new Mail_mime([]);
+        $objDateTime = new DateTime('NOW');
+        $dateTimeNow = $objDateTime->format(DateTime::ISO8601);
 
         $mime->setTXTBody($mailBody);
         $mime->setHTMLBody($htmlBody);
-        $mime->headers(['BeforeSend' => 'false', 'From' => $from,'Subject' => $subject]);
+        $mime->headers(['BeforeSend' => 'false', 'From' => $from,'Subject' => $subject, 'Date' => $dateTimeNow]);
 
 
         $rcmail = rcmail::get_instance();
