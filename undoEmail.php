@@ -19,10 +19,12 @@ class undoEmail extends rcube_plugin
     function deleteMail()
     {
         try {
-            $dbHostname = "localhost";
-            $dbUsername = "root";
-            $dbPassword = null;
-            $dbDatabase = "email";
+            $config = parse_ini_file('config.ini');
+
+            $dbHostname = $config['db_hostname'];
+            $dbUsername = $config['db_username'];
+            $dbPassword = $config['db_password'];
+            $dbDatabase = $config['db_database'];
 
             $conn = new mysqli($dbHostname, $dbUsername, $dbPassword, $dbDatabase);
             $stmt = ("DELETE FROM unsentemails ORDER BY emailID DESC LIMIT 1");
@@ -35,10 +37,12 @@ class undoEmail extends rcube_plugin
     }
 
     function sendMail(){
-        $dbHostname = "localhost";
-        $dbUsername = "root";
-        $dbPassword = null;
-        $dbDatabase = "email";
+        $config = parse_ini_file('config.ini');
+
+        $dbHostname = $config['db_hostname'];
+        $dbUsername = $config['db_username'];
+        $dbPassword = $config['db_password'];
+        $dbDatabase = $config['db_database'];
 
         $conn = new mysqli($dbHostname, $dbUsername, $dbPassword, $dbDatabase);
         $query = "select * from unsentemails order by emailId desc limit 1";
@@ -100,10 +104,12 @@ class undoEmail extends rcube_plugin
         $args['result'] = false;
 
         try {
-            $dbHostname = "localhost";
-            $dbUsername = "root";
-            $dbPassword = null;
-            $dbDatabase = "email";
+            $config = parse_ini_file('config.ini');
+
+            $dbHostname = $config['db_hostname'];
+            $dbUsername = $config['db_username'];
+            $dbPassword = $config['db_password'];
+            $dbDatabase = $config['db_database'];
 
             $conn = new mysqli($dbHostname, $dbUsername, $dbPassword, $dbDatabase);
             $stmt = $conn->prepare("insert into unsentemails (receiverMail,senderMail,mailBody, htmlBody,subject) values (?, ?, ?, ?, ?)");
