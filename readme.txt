@@ -16,4 +16,4 @@
 			);
 
 
-•	Příp. přepsat název db v undoEmail.php, hlavní je, aby db měla tabulku unsentemails.
+•	Případně přepsat nastavení db v configu, hlavní je existence tabulky unsentemails
