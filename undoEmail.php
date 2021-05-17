@@ -1,7 +1,11 @@
 <?php
 class undoEmail extends rcube_plugin
 {
-
+    public $dbHostname;
+    public $dbUsername;
+    public $dbPassword;
+    public $dbDatabase;
+    public $sendingMail;
     public $task = 'mail';
     private $map;
 
@@ -13,22 +17,22 @@ class undoEmail extends rcube_plugin
         $this->include_script('buttons.js');
         $this->register_action('plugin.cancelMail', [$this, 'deleteMail']);
         $this->register_action('plugin.sendMail', [$this, 'sendMail']);
+
         $config = parse_ini_file('config.ini');
-        $countdown = $config['timer'];
+
+        $this->dbHostname = $config['db_hostname'];
+        $this->dbUsername = $config['db_username'];
+        $this->dbPassword = $config['db_password'];
+        $this->dbDatabase = $config['db_database'];
+
     }
 
 
     function deleteMail()
     {
         try {
-            $config = parse_ini_file('config.ini');
 
-            $dbHostname = $config['db_hostname'];
-            $dbUsername = $config['db_username'];
-            $dbPassword = $config['db_password'];
-            $dbDatabase = $config['db_database'];
-
-            $conn = new mysqli($dbHostname, $dbUsername, $dbPassword, $dbDatabase);
+            $conn = new mysqli($this->dbHostname, $this->dbUsername, $this->dbPassword, $this->dbDatabase);
             $stmt = ("DELETE FROM unsentemails ORDER BY emailID DESC LIMIT 1");
 
             $conn->query($stmt);
@@ -39,31 +43,26 @@ class undoEmail extends rcube_plugin
     }
 
     function sendMail(){
-        $config = parse_ini_file('config.ini');
-
-        $dbHostname = $config['db_hostname'];
-        $dbUsername = $config['db_username'];
-        $dbPassword = $config['db_password'];
-        $dbDatabase = $config['db_database'];
-
-        $conn = new mysqli($dbHostname, $dbUsername, $dbPassword, $dbDatabase);
+        $conn = new mysqli($this->dbHostname, $this->dbUsername, $this->dbPassword, $this->dbDatabase);
         $query = "select * from unsentemails order by emailId desc limit 1";
         $result = $conn->query($query);
-            while ($row = $result->fetch_assoc()) {
-                $from = $row["senderMail"];
-                $to = $row["receiverMail"];
-                $mailBody = $row["mailBody"];
-                $htmlBody = $row["htmlBody"];
-                $subject = $row["subject"];
-            }
+        while ($row = $result->fetch_assoc()) {
+            $from = $row["senderMail"];
+            $to = $row["receiverMail"];
+            $mailBody = $row["mailBody"];
+            $htmlBody = $row["htmlBody"];
+            $subject = $row["subject"];
+        }
         $stmt = ("DELETE FROM unsentemails ORDER BY emailID DESC LIMIT 1");
         $conn->query($stmt);
         $mime = new Mail_mime([]);
+
         $objDateTime = new DateTime('NOW');
         $dateTimeNow = $objDateTime->format(DateTime::ISO8601);
 
         $mime->setTXTBody($mailBody);
         $mime->setHTMLBody($htmlBody);
+        $mime->get($params['text_charset'] = "UTF-8");
         $mime->headers(['BeforeSend' => 'false', 'From' => $from,'Subject' => $subject, 'Date' => $dateTimeNow]);
 
 
@@ -99,6 +98,11 @@ class undoEmail extends rcube_plugin
         $to = $args['mailto'];
         $from = $args['from'];
 
+        $this->sendingMail = $from;
+
+        global $mailSender;
+        $mailSender = $from;
+
         $GLOBALS["sendingMail"] = $from;
 
         $args['abort'] = true;
@@ -106,14 +110,7 @@ class undoEmail extends rcube_plugin
         $args['result'] = false;
 
         try {
-            $config = parse_ini_file('config.ini');
-
-            $dbHostname = $config['db_hostname'];
-            $dbUsername = $config['db_username'];
-            $dbPassword = $config['db_password'];
-            $dbDatabase = $config['db_database'];
-
-            $conn = new mysqli($dbHostname, $dbUsername, $dbPassword, $dbDatabase);
+            $conn = new mysqli($this->dbHostname, $this->dbUsername, $this->dbPassword, $this->dbDatabase);
             $stmt = $conn->prepare("insert into unsentemails (receiverMail,senderMail,mailBody, htmlBody,subject) values (?, ?, ?, ?, ?)");
             $stmt->bind_param('sssss', $to, $from, $mailBody, $htmlBody, $mailSubject);
 
