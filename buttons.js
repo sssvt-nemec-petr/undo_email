@@ -30,9 +30,9 @@ rcmail.addEventListener('init', function(evt) {
                 clearInterval(x);
                 if(enableSend == true) {
                     var objtext = rcmail.http_get('plugin.sendMail');
+                    alert('Email sent');
                 }
                 enableSend = false;
-                alert('Email sent');
                 window.history.back();
             }
         }, 1000);
