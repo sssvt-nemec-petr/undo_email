@@ -13,6 +13,8 @@ class undoEmail extends rcube_plugin
         $this->include_script('buttons.js');
         $this->register_action('plugin.cancelMail', [$this, 'deleteMail']);
         $this->register_action('plugin.sendMail', [$this, 'sendMail']);
+        $config = parse_ini_file('config.ini');
+        $countdown = $config['timer'];
     }
 
 

@@ -18,7 +18,7 @@ rcmail.addEventListener('init', function(evt) {
                 var objtext = rcmail.http_get('plugin.sendMail');
             }
         });
-        var countDownDate = new Date().getTime()+timer*1000;
+        var countDownDate = new Date().getTime()+8*1000;
 
         var x = setInterval(function() {
             var now = new Date().getTime();
