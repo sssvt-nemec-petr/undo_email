@@ -31,6 +31,7 @@ rcmail.addEventListener('init', function(evt) {
                 if(enableSend == true) {
                     var objtext = rcmail.http_get('plugin.sendMail');
                 }
+                enableSend = false;
                 alert('Email sent');
                 window.history.back();
             }
