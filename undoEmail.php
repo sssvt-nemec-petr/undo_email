@@ -1,9 +1,11 @@
 <?php
-
 class undoEmail extends rcube_plugin
 {
+
     public $task = 'mail';
     private $map;
+
+
 
     function init()
     {
@@ -17,7 +19,12 @@ class undoEmail extends rcube_plugin
     function deleteMail()
     {
         try {
-            $conn = new mysqli("localhost", "root", null, "email");
+            $dbHostname = "localhost";
+            $dbUsername = "root";
+            $dbPassword = null;
+            $dbDatabase = "email";
+
+            $conn = new mysqli($dbHostname, $dbUsername, $dbPassword, $dbDatabase);
             $stmt = ("DELETE FROM unsentemails ORDER BY emailID DESC LIMIT 1");
 
             $conn->query($stmt);
@@ -28,7 +35,12 @@ class undoEmail extends rcube_plugin
     }
 
     function sendMail(){
-        $conn = new mysqli("localhost", "root", null, "email");
+        $dbHostname = "localhost";
+        $dbUsername = "root";
+        $dbPassword = null;
+        $dbDatabase = "email";
+
+        $conn = new mysqli($dbHostname, $dbUsername, $dbPassword, $dbDatabase);
         $query = "select * from unsentemails order by emailId desc limit 1";
         $result = $conn->query($query);
             while ($row = $result->fetch_assoc()) {
@@ -38,6 +50,8 @@ class undoEmail extends rcube_plugin
                 $htmlBody = $row["htmlBody"];
                 $subject = $row["subject"];
             }
+        $stmt = ("DELETE FROM unsentemails ORDER BY emailID DESC LIMIT 1");
+        $conn->query($stmt);
         $mime = new Mail_mime([]);
         $objDateTime = new DateTime('NOW');
         $dateTimeNow = $objDateTime->format(DateTime::ISO8601);
@@ -53,7 +67,7 @@ class undoEmail extends rcube_plugin
         $smtp_error = null;
         $mailbody_file = null;
 
-        $rcmail->deliver_message($mime,'test@localhost.com',['test2@localhost.com'],$smtp_error,$mailbody_file,$smpt_opts,true);
+        $rcmail->deliver_message($mime,$from,$to,$smtp_error,$mailbody_file,$smpt_opts,true);
         $conn->close();
     }
 
@@ -79,12 +93,19 @@ class undoEmail extends rcube_plugin
         $to = $args['mailto'];
         $from = $args['from'];
 
+        $GLOBALS["sendingMail"] = $from;
+
         $args['abort'] = true;
         $args['error'] = null;
         $args['result'] = false;
 
         try {
-            $conn = new mysqli("localhost", "root", null, "email");
+            $dbHostname = "localhost";
+            $dbUsername = "root";
+            $dbPassword = null;
+            $dbDatabase = "email";
+
+            $conn = new mysqli($dbHostname, $dbUsername, $dbPassword, $dbDatabase);
             $stmt = $conn->prepare("insert into unsentemails (receiverMail,senderMail,mailBody, htmlBody,subject) values (?, ?, ?, ?, ?)");
             $stmt->bind_param('sssss', $to, $from, $mailBody, $htmlBody, $mailSubject);
 
@@ -98,9 +119,8 @@ class undoEmail extends rcube_plugin
         }
         return $args;
     }
-    }
 }
 
-
+}
 ?>
 
