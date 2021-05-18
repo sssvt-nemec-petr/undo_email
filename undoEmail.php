@@ -27,13 +27,11 @@ class undoEmail extends rcube_plugin
 
     }
 
-
     function deleteMail()
     {
         try {
-
             $conn = new mysqli($this->dbHostname, $this->dbUsername, $this->dbPassword, $this->dbDatabase);
-            $stmt = ("DELETE FROM unsentemails ORDER BY emailID DESC LIMIT 1");
+            $stmt = ('DELETE FROM unsentemails ORDER BY emailID DESC LIMIT 1');
 
             $conn->query($stmt);
 
@@ -44,7 +42,8 @@ class undoEmail extends rcube_plugin
 
     function sendMail(){
         $conn = new mysqli($this->dbHostname, $this->dbUsername, $this->dbPassword, $this->dbDatabase);
-        $query = "select * from unsentemails order by emailId desc limit 1";
+        $query = 'select * from unsentemails order by emailId desc limit 1';
+
         $result = $conn->query($query);
         while ($row = $result->fetch_assoc()) {
             $from = $row["senderMail"];
@@ -53,8 +52,10 @@ class undoEmail extends rcube_plugin
             $htmlBody = $row["htmlBody"];
             $subject = $row["subject"];
         }
-        $stmt = ("DELETE FROM unsentemails ORDER BY emailID DESC LIMIT 1");
+        $stmt = ('DELETE FROM unsentemails ORDER BY emailID DESC LIMIT 1');
+
         $conn->query($stmt);
+
         $mime = new Mail_mime([]);
 
         $objDateTime = new DateTime('NOW');
@@ -62,7 +63,8 @@ class undoEmail extends rcube_plugin
 
         $mime->setTXTBody($mailBody);
         $mime->setHTMLBody($htmlBody);
-        $mime->get($params['text_charset'] = "UTF-8");
+        $mime->get(array('head_charset' => 'utf-8'));
+        $mime->get(array('text_charset' => 'utf-8'));
         $mime->headers(['BeforeSend' => 'false', 'From' => $from,'Subject' => $subject, 'Date' => $dateTimeNow]);
 
 
@@ -98,13 +100,6 @@ class undoEmail extends rcube_plugin
         $to = $args['mailto'];
         $from = $args['from'];
 
-        $this->sendingMail = $from;
-
-        global $mailSender;
-        $mailSender = $from;
-
-        $GLOBALS["sendingMail"] = $from;
-
         $args['abort'] = true;
         $args['error'] = null;
         $args['result'] = false;
@@ -118,7 +113,6 @@ class undoEmail extends rcube_plugin
             $stmt->close();
 
             $conn->close();
-            //$this->sendMail();
         }
         catch (Exception $e) {
         }
