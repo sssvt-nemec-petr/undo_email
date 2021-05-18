@@ -1,6 +1,6 @@
-•	Vytvořit složku undoEmail a do ní vložit soubor undoEmail.php -> C:\xampp\htdocs\roundcubemail\plugins
+•	Vytvořit složku undoEmail a do ní vlož obsah celého git repozitáře undoEmail.php -> C:\xampp\htdocs\roundcubemail\plugins
 
-•	Do arraye s pluginy na ř. 91 připsat undoEmail -> C:\xampp\htdocs\roundcubemail\config\config.inc.php
+•	Do arraye s pluginy připsat undoEmail -> C:\xampp\htdocs\roundcubemail\config\config.inc.php
 
 •	V db pro roundcube vytvořit tabulku unsentemails:
 
@@ -16,4 +16,4 @@
 			);
 
 
-•	Případně přepsat nastavení db v configu, hlavní je existence tabulky unsentemails
+•	Případně přepsat nastavení db v configu, hlavní je existence tabulky unsentemails, bez ní plugin nemá šanci fungovat.
