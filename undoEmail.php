@@ -63,8 +63,8 @@ class undoEmail extends rcube_plugin
 
         $mime->setTXTBody($mailBody);
         $mime->setHTMLBody($htmlBody);
-        $mime->get(array('head_charset' => 'utf-8'));
-        $mime->get(array('text_charset' => 'utf-8'));
+        $mime->get(['head_charset' => 'utf-8']);
+        $mime->get(['text_charset' => 'utf-8']);
         $mime->headers(['BeforeSend' => 'false', 'From' => $from,'Subject' => $subject, 'Date' => $dateTimeNow]);
 
 
