@@ -5,7 +5,6 @@ class undoEmail extends rcube_plugin
     public $dbUsername;
     public $dbPassword;
     public $dbDatabase;
-    public $sendingMail;
     public $task = 'mail';
     private $map;
 
