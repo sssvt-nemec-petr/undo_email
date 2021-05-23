@@ -1,4 +1,4 @@
-•	Vytvořit složku undoEmail a do ní vlož obsah celého git repozitáře undoEmail.php -> C:\xampp\htdocs\roundcubemail\plugins
+•	Vytvořit složku undoEmail a do ní vlož obsah celého git repozitáře undoEmail -> C:\xampp\htdocs\roundcubemail\plugins
 
 •	Do arraye s pluginy připsat undoEmail -> C:\xampp\htdocs\roundcubemail\config\config.inc.php
 
