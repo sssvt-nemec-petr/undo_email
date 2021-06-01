@@ -17,3 +17,6 @@
 
 
 •	Případně přepsat nastavení db v configu, hlavní je existence tabulky unsentemails, bez ní plugin nemá šanci fungovat.
+
+
+Tabulka unsentemails, kterou zde definuji, je zastaralá a s pluginem nekompatibilní, aktualizuji. 
