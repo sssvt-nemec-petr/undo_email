@@ -30,7 +30,7 @@ class undoEmail extends rcube_plugin
     {
         try {
             $conn = new mysqli($this->dbHostname, $this->dbUsername, $this->dbPassword, $this->dbDatabase);
-            $stmt = ('DELETE FROM unsentemails ORDER BY emailID DESC LIMIT 1');
+            $stmt = ('DELETE FROM unsent_emails ORDER BY email_id DESC LIMIT 1');
 
             $conn->query($stmt);
 
@@ -41,7 +41,7 @@ class undoEmail extends rcube_plugin
 
     function sendMail(){
         $conn = new mysqli($this->dbHostname, $this->dbUsername, $this->dbPassword, $this->dbDatabase);
-        $query = 'select * from unsentemails order by emailId desc limit 1';
+        $query = 'select * from unsent_emails order by email_id desc limit 1';
 
         $result = $conn->query($query);
         while ($row = $result->fetch_assoc()) {
@@ -51,7 +51,7 @@ class undoEmail extends rcube_plugin
             $htmlBody = $row["htmlBody"];
             $subject = $row["subject"];
         }
-        $stmt = ('DELETE FROM unsentemails ORDER BY emailID DESC LIMIT 1');
+        $stmt = ('DELETE FROM unsent_emails ORDER BY email_id DESC LIMIT 1');
 
         $conn->query($stmt);
 
@@ -106,7 +106,7 @@ class undoEmail extends rcube_plugin
 
         try {
             $conn = new mysqli($this->dbHostname, $this->dbUsername, $this->dbPassword, $this->dbDatabase);
-            $stmt = $conn->prepare("insert into unsentemails (receiverMail,senderMail,mailBody, htmlBody,subject) values (?, ?, ?, ?, ?)");
+            $stmt = $conn->prepare("insert into unsent_emails (receiver_mail,sender_mail,mail_body, html_body,subject) values (?, ?, ?, ?, ?)");
             $stmt->bind_param('sssss', $to, $from, $mailBody, $htmlBody, $mailSubject);
 
             $stmt->execute();
