@@ -23,7 +23,6 @@ class undoEmail extends rcube_plugin
         $this->dbUsername = $config['db_username'];
         $this->dbPassword = $config['db_password'];
         $this->dbDatabase = $config['db_database'];
-
     }
 
     function deleteMail()
@@ -45,10 +44,10 @@ class undoEmail extends rcube_plugin
 
         $result = $conn->query($query);
         while ($row = $result->fetch_assoc()) {
-            $from = $row["senderMail"];
-            $to = $row["receiverMail"];
-            $mailBody = $row["mailBody"];
-            $htmlBody = $row["htmlBody"];
+            $from = $row["sender_mail"];
+            $to = $row["receiver_mail"];
+            $mailBody = $row["mail_mail"];
+            $htmlBody = $row["html_body"];
             $subject = $row["subject"];
         }
         $stmt = ('DELETE FROM unsent_emails ORDER BY email_id DESC LIMIT 1');
