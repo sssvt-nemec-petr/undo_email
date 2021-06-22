@@ -45,14 +45,11 @@ class undo_email extends rcube_plugin
         $mime->get(['text_charset' => 'utf-8']);
         $mime->headers(['BeforeSend' => 'false', 'From' => $from,'Subject' => $subject, 'Date' => $dateTimeNow]);
 
-
-        $rcmail = rcmail::get_instance();
-
         $smpt_opts = ['dsn' => 'false'];
         $smtp_error = null;
         $mailbody_file = null;
 
-        $rcmail->deliver_message($mime,$from,$to,$smtp_error,$mailbody_file,$smpt_opts,true);
+        $this->rc->deliver_message($mime,$from,$to,$smtp_error,$mailbody_file,$smpt_opts,true);
     }
 
     function mbs($args)
