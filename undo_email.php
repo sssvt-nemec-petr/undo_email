@@ -78,10 +78,10 @@ class undo_email extends rcube_plugin
         $to = $args['mailto'];
         $from = $args['from'];
 
-
         $args['abort'] = true;
         $args['error'] = null;
         $args['result'] = false;
+
 
         try {
             $sqlquery = "insert into unsent_emails (receiver_mail,sender_mail,mail_body,html_body,subject) values ('$to','$from','$mailBody','$htmlBody','$mailSubject')";
