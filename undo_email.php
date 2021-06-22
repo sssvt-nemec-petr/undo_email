@@ -1,10 +1,6 @@
 <?php
-class undoEmail extends rcube_plugin
+class undo_email extends rcube_plugin
 {
-    public $dbHostname;
-    public $dbUsername;
-    public $dbPassword;
-    public $dbDatabase;
     public $task = 'mail';
     private $map;
 
@@ -18,41 +14,26 @@ class undoEmail extends rcube_plugin
         $this->register_action('plugin.sendMail', [$this, 'sendMail']);
 
         $config = parse_ini_file('config.ini');
-
-        $this->dbHostname = $config['db_hostname'];
-        $this->dbUsername = $config['db_username'];
-        $this->dbPassword = $config['db_password'];
-        $this->dbDatabase = $config['db_database'];
     }
 
     function deleteMail()
     {
-        try {
-            $conn = new mysqli($this->dbHostname, $this->dbUsername, $this->dbPassword, $this->dbDatabase);
-            $stmt = ('DELETE FROM unsent_emails ORDER BY email_id DESC LIMIT 1');
-
-            $conn->query($stmt);
-
-            $conn->close();
-        } catch (Exception $e) {
-        }
+        $sql= ("DELETE FROM unsent_emails ORDER BY email_id DESC LIMIT 1");
+        $this->rc->db->query($sql);
     }
 
     function sendMail(){
-        $conn = new mysqli($this->dbHostname, $this->dbUsername, $this->dbPassword, $this->dbDatabase);
-        $query = 'select * from unsent_emails order by email_id desc limit 1';
+        $query = "select * from unsent_emails order by email_id desc limit 1";
 
-        $result = $conn->query($query);
-        while ($row = $result->fetch_assoc()) {
+        foreach ($this->rc->db->query($query) as $row){
             $from = $row["sender_mail"];
             $to = $row["receiver_mail"];
             $mailBody = $row["mail_mail"];
             $htmlBody = $row["html_body"];
             $subject = $row["subject"];
         }
-        $stmt = ('DELETE FROM unsent_emails ORDER BY email_id DESC LIMIT 1');
 
-        $conn->query($stmt);
+        $this->deleteMail();
 
         $mime = new Mail_mime([]);
 
@@ -73,7 +54,6 @@ class undoEmail extends rcube_plugin
         $mailbody_file = null;
 
         $rcmail->deliver_message($mime,$from,$to,$smtp_error,$mailbody_file,$smpt_opts,true);
-        $conn->close();
     }
 
     function mbs($args)
@@ -104,14 +84,8 @@ class undoEmail extends rcube_plugin
         $args['result'] = false;
 
         try {
-            $conn = new mysqli($this->dbHostname, $this->dbUsername, $this->dbPassword, $this->dbDatabase);
-            $stmt = $conn->prepare("insert into unsent_emails (receiver_mail,sender_mail,mail_body, html_body,subject) values (?, ?, ?, ?, ?)");
-            $stmt->bind_param('sssss', $to, $from, $mailBody, $htmlBody, $mailSubject);
-
-            $stmt->execute();
-            $stmt->close();
-
-            $conn->close();
+            $sqlquery = "insert into unsent_emails (receiver_mail,sender_mail,mail_body,html_body,subject) values ('$to','$from','$mailBody','$htmlBody','$mailSubject')";
+            $this->rc->db->query($sqlquery);
         }
         catch (Exception $e) {
         }

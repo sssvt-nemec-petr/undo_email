@@ -1,5 +1,4 @@
 rcmail.addEventListener('init', function(evt) {
-    window.onbeforeunload = null;
     $(".formbuttons").append("<a id='undoButton' style='position:relative;top: 1px;padding:10px;border-radius: 4px;border:1px solid rgb(55,190,255);background-color: rgb(0,106,157);color: rgb(226,232,233);z-index: 9999' href='javascript:void(0)'>Undo</a>");
     $(".formbuttons").append("<a id='sendButton' style='position:relative;left: 11px;top: 1px;padding:10px;border-radius: 4px;border:1px solid rgb(55,190,255);background-color: rgb(0,106,157);color: rgb(226,232,233);z-index: 9999' href='javascript:void(0)'>Send now</a>");
     $("#undoButton").hide();
@@ -12,6 +11,7 @@ rcmail.addEventListener('init', function(evt) {
         console.log(resp);
     })
     $("#rcmbtn112").click(function(){
+        window.onbeforeunload = null;
         enableSend = true;
         $("#undoButton").show();
         $("#sendButton").show();
