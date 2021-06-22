@@ -27,7 +27,7 @@ class undo_email extends rcube_plugin
         foreach ($this->rc->db->query($query) as $row){
             $from = $row["sender_mail"];
             $to = $row["receiver_mail"];
-            $mailBody = $row["mail_mail"];
+            $mailBody = $row["mail_body"];
             $htmlBody = $row["html_body"];
             $subject = $row["subject"];
         }
