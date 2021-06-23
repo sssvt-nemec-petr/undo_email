@@ -81,22 +81,3 @@ After this step, the connection is closed with database.
 3. The sending can then be confirmed  or the email returned with the <i><u>Undo button</u></i>
 
 ----
-
-
-
-
-
-# UndoEmail/config.ini
-
-- configuration of the database and setting of the timer for which the email can be thrown out of the queue
-
- 
-
-|      | [database_config]       |
-| ---- | ----------------------- |
-|      | db_hostname = localhost |
-|      | db_username = root      |
-|      | db_password = null      |
-|      | db_database = email     |
-|      | [countdown]             |
-|      | timer = 8               |
