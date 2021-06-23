@@ -14,15 +14,15 @@
 
    ​             (
 
-   ​               emailID   int auto_increment primary key,
+   ​               email_id   int auto_increment primary key,
 
-   ​               receiverMail text not null,
+   ​               receiver_mail text not null,
 
-   ​               senderMail  text not null,
+   ​               sender_mail  text not null,
 
-   ​               htmlBody   text null,
+   ​               html_body   text null,
 
-   ​               mailBody   text null,
+   ​               mail_body   text null,
 
    ​               subject   text null
 
