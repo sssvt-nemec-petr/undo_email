@@ -9,7 +9,7 @@
 3. Create a table named unsentEmails in your roundcube database. 
 
    ```
-   Table definition: create table unsentemails
+   Table definition: create table unsent_emails
    ```
 
    ​             (
